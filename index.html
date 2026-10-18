@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Timetable Generator</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"
+            defer></script>
+</head>
+<body>
+<header class="hero">
+    <h1>VTU Exam Timetable Generator</h1>
+    <p>Plan semester examinations quickly and easily</p>
+</header>
+
+<main class="container">
+    {% if error %}
+        <div class="error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" id="timetableForm">
+        <section class="panel">
+            <h2>1. Examination Period</h2>
+
+            <div class="grid">
+                <label>Start Date
+                    <input type="date" name="start_date" required><br>
+                </label>
+
+                <label>End Date
+                    <input type="date" name="end_date" required>
+                </label>
+            </div>
+
+            <label>Government Holidays
+                <textarea name="holidays" rows="4"
+                    placeholder="One date per line&#10;2026-11-01&#10;2026-11-10"></textarea>
+                <small>Use YYYY-MM-DD. Leave blank if there are no holidays.</small>
+            </label>
+        </section>
+
+        <section class="panel">
+            <h2>2. Semester Details</h2>
+
+            <label>Number of Semesters
+                <input type="number" id="total_semesters"
+                       name="total_semesters"
+                       min="1" max="20" value="1" required>
+            </label>
+
+            <div id="semesterFields"></div>
+        </section>
+
+        <section class="panel">
+            <h2>3. Exam Scheduling Rules</h2>
+
+            <label>Number of Exams Per Day
+                <input type="number" id="exams_per_day"
+                       name="exams_per_day"
+                       min="1" max="10" value="2" required>
+            </label>
+
+            <label>Time Slots (one per line)
+                <textarea id="time_slots" name="time_slots"
+                    rows="3" required>09:00 AM - 12:00 PM
+02:00 PM - 05:00 PM</textarea>
+                <small>The number of time slots must match the daily exam limit.</small>
+            </label>
+
+            <label>Gap Days Between Exam Dates
+                <input type="number" name="gap_days"
+                       min="0" value="1" required>
+                <small>Only valid weekdays count as gap days. Sundays and holidays are skipped.</small>
+            </label>
+        </section>
+
+        <button type="submit" class="primary">
+            Generate Timetable
+        </button>
+    </form>
+
+    {% if timetables %}
+    <section class="results">
+        <h2>Generated Examination Timetables</h2>
+
+        {% for semester in timetables %}
+        <div class="panel timetable">
+            <h3>Semester {{ semester.number }} — {{ semester.branch }}</h3>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Semester</th>
+                            <th>Time Slot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in semester.exams %}
+                        <tr>
+                            <td>{{ exam.date }}</td>
+                            <td>{{ exam.subject }}</td>
+                            <td>{{ exam.semester }}</td>
+                            <td>{{ exam.time_slot }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" class="secondary print-button"
+                    onclick="window.print()">
+                Print Timetable
+            </button>
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+</main>
+
+<footer>
+    <p>Exam Timetable Generator System</p>
+</footer>
+</body>
+</html>
