@@ -5,7 +5,7 @@ The VTU Exam Timetable Generator is a web-based application developed to generat
 The main aim of this project is to help VTU examination authorities create an organized examination timetable while reducing subject clashes and scheduling conflicts.
 The application provides a simple and user-friendly interface for managing and generating examination schedules.
 
-🎯 Objectives
+🎯 Objectives.
 To generate semester examination timetables.
 To reduce scheduling conflicts between subjects.
 To save time in preparing examination schedules.
